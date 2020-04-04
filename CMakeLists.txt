@@ -23,10 +23,14 @@ endif()
 option(BUILD_SHARED_LIBS "Build shared libs" on)
 option(WITH_NTL "Build with NTL or not" off)
 
-find_package(GMP REQUIRED)
-find_package(MPFR REQUIRED)
-if (WITH_NTL)
-    find_package(NTL REQUIRED)
+if(WITH_MPIR)
+  find_package(MPIR 3.0.0 REQUIRED)
+else()
+  find_package(GMP 6.0.0 REQUIRED)
+endif()
+find_package(MPFR 4.0.1 REQUIRED)
+if(WITH_NTL)
+    find_package(NTL 10.5.0 REQUIRED)
 endif()
 find_package(PythonInterp REQUIRED)
 
@@ -218,7 +222,7 @@ list(APPEND HEADERS ${TEMP})
 
 add_library(flint ${SOURCES})
 target_link_libraries(flint PUBLIC
-    ${NTL_LIBRARY} ${MPFR_LIBRARIES} ${GMP_LIBRARIES} ${PThreads_LIBRARIES}
+    ${NTL_LIBRARIES} ${MPFR_LIBRARIES} ${GMP_LIBRARIES} ${PThreads_LIBRARIES}
 )
 
 # Include directories
