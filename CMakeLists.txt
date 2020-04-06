@@ -21,10 +21,13 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
 endif()
 
 option(BUILD_SHARED_LIBS "Build shared libs" on)
+option(WITH_MPIR "Build with MPIR or not" off)
 option(WITH_NTL "Build with NTL or not" off)
 
 if(WITH_MPIR)
   find_package(MPIR 3.0.0 REQUIRED)
+  set(GMP_LIBRARIES ${MPIR_LIBRARIES})
+  set(GMP_INCLUDE_DIRS ${MPIR_INCLUDE_DIRS})
 else()
   find_package(GMP 6.0.0 REQUIRED)
 endif()
