@@ -860,7 +860,8 @@ Powering
     ``f``.
 
 .. function:: void _nmod_poly_powmod_x_fmpz_preinv (mp_ptr res, fmpz_t e, mp_srcptr f, slong lenf, mp_srcptr finv, slong lenfinv, nmod_t mod)
-                                                                                              Sets ``res`` to ``x`` raised to the power ``e`` modulo ``f``,
+
+    Sets ``res`` to ``x`` raised to the power ``e`` modulo ``f``,
     using sliding window exponentiation. We require ``e > 0``.
     We require ``finv`` to be the inverse of the reverse of ``f``.
 
@@ -1645,7 +1646,7 @@ Modular composition
     of the reverse of ``h``. No aliasing of ``res`` and ``polys`` is allowed.
     The algorithm used is the Brent-Kung matrix algorithm.
 
-.. function:: void _nmod_poly_compose_mod_brent_kung_vec_preinv_threaded_pool(nmod_poly_struct * res, const nmod_poly_struct * polys, slong lenpolys, slong l, const mp_srcptr g, slong glen, mp_srcptr poly, slong len, mp_srcptr polyinv, slong leninv, nmod_t mod, thread_pool_handle * threads, slong num_threads)
+.. function:: void _nmod_poly_compose_mod_brent_kung_vec_preinv_threaded_pool(nmod_poly_struct * res, const nmod_poly_struct * polys, slong lenpolys, slong l, mp_srcptr g, slong glen, mp_srcptr poly, slong len, mp_srcptr polyinv, slong leninv, nmod_t mod, thread_pool_handle * threads, slong num_threads)
 
     Multithreaded version of
     :func:`_nmod_poly_compose_mod_brent_kung_vec_preinv`. Distributing the
@@ -2541,7 +2542,7 @@ Products
     of `(x - x_0)(x - x_1) \cdots (x - x_{n-1})`, the roots `x_i` being
     given by ``xs``.
 
-.. function:: void int nmod_poly_find_distinct_nonzero_roots(mp_limb_t * roots, const nmod_poly_t A)
+.. function:: int nmod_poly_find_distinct_nonzero_roots(mp_limb_t * roots, const nmod_poly_t A)
 
     If ``A`` has `\deg(A)` distinct nonzero roots in `\mathbb{F}_p`, write these roots out to ``roots[0]`` to ``roots[deg(A) - 1]`` and return ``1``.
     Otherwise, return ``0``. It is assumed that ``A`` is nonzero and that the modulus of ``A`` is prime.

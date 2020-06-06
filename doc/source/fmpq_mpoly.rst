@@ -4,7 +4,7 @@
 ===============================================================================
 
     The exponents follow the ``mpoly`` interface.
-    No references to the coefficients are avaiable.
+    No references to the coefficients are available.
 
 Types, macros and constants
 -------------------------------------------------------------------------------
@@ -240,7 +240,7 @@ Coefficients
 
     Set the coefficient of the monomial with exponent ``exp`` to ``c``.
 
-.. function:: void fmpq_mpoly_get_coeff_vars_ui(fmpq_mpoly_t C, const fmpq_mpoly_t A, slong * vars, ulong * exps, slong length, const fmpq_mpoly_ctx_t ctx)
+.. function:: void fmpq_mpoly_get_coeff_vars_ui(fmpq_mpoly_t C, const fmpq_mpoly_t A, const slong * vars, const ulong * exps, slong length, const fmpq_mpoly_ctx_t ctx)
 
     Set ``C`` to the coefficient of ``A`` with respect to the variables in ``vars`` with powers in the corresponding array ``exps``.
     Both ``vars`` and ``exps`` point to array of length ``length``. It is assumed that `0 < length \le nvars(A)` and that the variables in ``vars`` are distinct. 
@@ -321,7 +321,7 @@ Container operations
     Return the exponent of the variable ``var`` of the term of index ``i``.
     This function throws if the exponent does not fit into a ``ulong`` (resp. ``slong``).
 
-.. function:: void fmpq_mpoly_set_term_exp_fmpz(fmpq_mpoly_t A, slong i, fmpz * const * exps, const const fmpq_mpoly_ctx_t ctx)
+.. function:: void fmpq_mpoly_set_term_exp_fmpz(fmpq_mpoly_t A, slong i, fmpz * const * exps, const fmpq_mpoly_ctx_t ctx)
               void fmpq_mpoly_set_term_exp_ui(fmpq_mpoly_t A, slong i, const ulong * exps, const fmpq_mpoly_ctx_t ctx)
 
     Set the exponent vector of the term of index ``i`` to ``exp``.
@@ -543,7 +543,7 @@ Division
 Greatest Common Divisor
 --------------------------------------------------------------------------------
 
-.. function:: fmpq_mpoly_content(fmpq_t g, const fmpq_mpoly_t A, const fmpq_mpoly_ctx_t ctx)
+.. function:: void fmpq_mpoly_content(fmpq_t g, const fmpq_mpoly_t A, const fmpq_mpoly_ctx_t ctx)
 
     Set ``g`` to the (nonnegative) gcd of the coefficients of ``A``.
 
