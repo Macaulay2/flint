@@ -56,8 +56,8 @@
 
 #define __FLINT_VERSION 2
 #define __FLINT_VERSION_MINOR 6
-#define __FLINT_VERSION_PATCHLEVEL 0
-#define FLINT_VERSION "2.6.0"
+#define __FLINT_VERSION_PATCHLEVEL 2
+#define FLINT_VERSION "2.6.2"
 #define __FLINT_RELEASE (__FLINT_VERSION * 10000 + \
                          __FLINT_VERSION_MINOR * 100 + \
                          __FLINT_VERSION_PATCHLEVEL)
@@ -311,6 +311,7 @@ typedef __mpfr_struct flint_mpfr;
 FLINT_DLL extern const unsigned char __flint_clz_tab[128];
 #endif
 
+/* Beware when using the unsigned return value in signed arithmetic */
 static __inline__
 mp_limb_t FLINT_BIT_COUNT(mp_limb_t x)
 {
