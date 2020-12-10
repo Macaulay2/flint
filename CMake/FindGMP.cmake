@@ -8,7 +8,9 @@
 # Once done this will define
 #
 #  GMP_FOUND             - system has GMP lib
+#  GMP_ROOT              - the GMP install prefix
 #  GMP_INCLUDE_DIRS      - the GMP include directory
+#  GMP_LIBRARY_DIRS      - the GMP library directory
 #  GMP_LIBRARIES         - Libraries needed to use GMP
 #  GMP_VERSION           - GMP version
 
@@ -71,7 +73,9 @@ endmacro(_gmp_check_version)
 
 if(NOT GMP_VERSION_OK)
   set(GMP_INCLUDE_DIRS NOTFOUND)
+  set(GMP_LIBRARY_DIRS NOTFOUND)
   set(GMP_LIBRARIES NOTFOUND)
+  set(GMPXX_LIBRARIES NOTFOUND)
 
   # search first if an GMPConfig.cmake is available in the system,
   # if successful this would set GMP_INCLUDE_DIRS and the rest of
@@ -81,8 +85,7 @@ if(NOT GMP_VERSION_OK)
   if(NOT GMP_INCLUDE_DIRS)
     find_path(GMP_INCLUDE_DIRS NAMES gmp.h
       HINTS ENV GMPDIR ENV GMPDIR
-      PATHS ${INCLUDE_INSTALL_DIR} ${CMAKE_INSTALL_PREFIX}/include
-      )
+      PATHS ${INCLUDE_INSTALL_DIR} ${CMAKE_INSTALL_PREFIX}/include)
   endif()
 
   if(GMP_INCLUDE_DIRS)
@@ -92,13 +95,22 @@ if(NOT GMP_VERSION_OK)
   if(NOT GMP_LIBRARIES)
     find_library(GMP_LIBRARIES NAMES gmp
       HINTS ENV GMPDIR ENV GMPDIR
-      PATHS ${LIB_INSTALL_DIR} ${CMAKE_INSTALL_PREFIX}/lib
-      )
+      PATHS ${LIB_INSTALL_DIR} ${CMAKE_INSTALL_PREFIX}/lib)
+    find_library(GMPXX_LIBRARIES NAMES gmpxx
+      HINTS ENV GMPDIR ENV GMPDIR
+      PATHS ${LIB_INSTALL_DIR} ${CMAKE_INSTALL_PREFIX}/lib)
+    set(GMP_LIBRARIES ${GMPXX_LIBRARIES} ${GMP_LIBRARIES})
   endif()
 
-  include(FindPackageHandleStandardArgs)
-  find_package_handle_standard_args(GMP DEFAULT_MSG GMP_INCLUDE_DIRS GMP_LIBRARIES GMP_VERSION_OK)
+  if(GMPXX_LIBRARIES)
+    get_filename_component(GMP_LIBRARY_DIRS "${GMPXX_LIBRARIES}" DIRECTORY)
+  endif()
 
-  mark_as_advanced(GMP_INCLUDE_DIRS GMP_LIBRARIES)
+  string(REGEX REPLACE "/include.*" "" GMP_ROOT "${GMP_INCLUDE_DIRS}")
+
+  include(FindPackageHandleStandardArgs)
+  find_package_handle_standard_args(GMP DEFAULT_MSG GMP_ROOT GMP_INCLUDE_DIRS GMP_LIBRARIES GMP_LIBRARY_DIRS GMP_VERSION_OK)
+
+  mark_as_advanced(GMP_ROOT GMP_INCLUDE_DIRS GMP_LIBRARIES GMP_LIBRARY_DIRS)
 
 endif()

@@ -8,7 +8,9 @@
 # Once done this will define
 #
 #  MPIR_FOUND             - system has MPIR lib
+#  MPIR_ROOT              - the MPIR install prefix
 #  MPIR_INCLUDE_DIRS      - the MPIR include directory
+#  MPIR_LIBRARY_DIRS      - the MPIR library directory
 #  MPIR_LIBRARIES         - Libraries needed to use MPIR
 #  MPIR_VERSION           - MPIR version
 
@@ -59,7 +61,9 @@ endmacro(_mpir_check_version)
 
 if(NOT MPIR_VERSION_OK)
   set(MPIR_INCLUDE_DIRS NOTFOUND)
+  set(MPIR_LIBRARY_DIRS NOTFOUND)
   set(MPIR_LIBRARIES NOTFOUND)
+  set(MPIRXX_LIBRARIES NOTFOUND)
 
   # search first if an MPIRConfig.cmake is available in the system,
   # if successful this would set MPIR_INCLUDE_DIRS and the rest of
@@ -69,8 +73,7 @@ if(NOT MPIR_VERSION_OK)
   if(NOT MPIR_INCLUDE_DIRS)
     find_path(MPIR_INCLUDE_DIRS NAMES mpir.h
       HINTS ENV MPIRDIR ENV GMPDIR
-      PATHS ${INCLUDE_INSTALL_DIR} ${CMAKE_INSTALL_PREFIX}/include
-      )
+      PATHS ${INCLUDE_INSTALL_DIR} ${CMAKE_INSTALL_PREFIX}/include)
   endif()
 
   if(MPIR_INCLUDE_DIRS)
@@ -80,13 +83,22 @@ if(NOT MPIR_VERSION_OK)
   if(NOT MPIR_LIBRARIES)
     find_library(MPIR_LIBRARIES NAMES mpir
       HINTS ENV MPIRDIR ENV GMPDIR
-      PATHS ${LIB_INSTALL_DIR} ${CMAKE_INSTALL_PREFIX}/lib
-      )
+      PATHS ${LIB_INSTALL_DIR} ${CMAKE_INSTALL_PREFIX}/lib)
+    find_library(MPIRXX_LIBRARIES NAMES mpirxx
+      HINTS ENV MPIRDIR ENV GMPDIR
+      PATHS ${LIB_INSTALL_DIR} ${CMAKE_INSTALL_PREFIX}/lib)
+    set(MPIR_LIBRARIES ${MPIRXX_LIBRARIES} ${MPIR_LIBRARIES})
   endif()
 
-  include(FindPackageHandleStandardArgs)
-  find_package_handle_standard_args(MPIR DEFAULT_MSG MPIR_INCLUDE_DIRS MPIR_LIBRARIES MPIR_VERSION_OK)
+  if(MPIRXX_LIBRARIES)
+    get_filename_component(MPIR_LIBRARY_DIRS "${MPIRXX_LIBRARIES}" DIRECTORY)
+  endif()
 
-  mark_as_advanced(MPIR_INCLUDE_DIRS MPIR_LIBRARIES)
+  string(REGEX REPLACE "/include.*" "" MPIR_ROOT "${MPIR_INCLUDE_DIRS}")
+
+  include(FindPackageHandleStandardArgs)
+  find_package_handle_standard_args(MPIR DEFAULT_MSG MPIR_ROOT MPIR_INCLUDE_DIRS MPIR_LIBRARIES MPIR_LIBRARY_DIRS MPIR_VERSION_OK)
+
+  mark_as_advanced(MPIR_ROOT MPIR_INCLUDE_DIRS MPIR_LIBRARIES MPIR_LIBRARY_DIRS)
 
 endif()
