@@ -1,5 +1,5 @@
-# Try to find the GMP library
-# https://gmplib.org/
+# Try to find the GNU Multiple Precision Arithmetic Library (GMP)
+# See http://gmplib.org/
 #
 # This module supports requiring a minimum version, e.g. you can do
 #   find_package(GMP 6.2.1)
@@ -73,7 +73,20 @@ if(NOT GMP_VERSION_OK)
   message(STATUS "No sufficient GMP version detected")
 endif()
 
-include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(GMP DEFAULT_MSG
-                                  GMP_INCLUDE_DIRS GMP_LIBRARIES GMP_VERSION_OK)
-mark_as_advanced(GMP_INCLUDE_DIRS GMP_LIBRARIES)
+  if(GMP_INCLUDE_DIRS)
+    _GMP_check_version()
+  endif()
+
+  if(NOT GMP_LIBRARIES)
+    find_library(GMP_LIBRARIES NAMES gmp
+      HINTS ENV GMPDIR ENV GMPDIR
+      PATHS ${LIB_INSTALL_DIR} ${CMAKE_INSTALL_PREFIX}/lib
+      )
+  endif()
+
+  include(FindPackageHandleStandardArgs)
+  find_package_handle_standard_args(GMP DEFAULT_MSG GMP_INCLUDE_DIRS GMP_LIBRARIES GMP_VERSION_OK)
+
+  mark_as_advanced(GMP_INCLUDE_DIRS GMP_LIBRARIES)
+
+endif()
